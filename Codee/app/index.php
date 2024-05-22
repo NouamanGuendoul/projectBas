@@ -12,6 +12,8 @@
             <ul>
                 <li><a href="index.php">Home</a></li>
                 <li><a href="voeg_klant_toe.php">inloggen/registeren</a></li>
+                <li><a href="create_artikel.php">Artikel</a></li>
+                <li><a href="/app/view_verkooporders.php">Verkooporder</a></li>
             </ul>
         </nav>
     </header>
