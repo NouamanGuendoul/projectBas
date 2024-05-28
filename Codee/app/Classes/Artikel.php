@@ -23,14 +23,9 @@ class Artikel {
             ]);
             
             // Controleer of de invoeging succesvol was
-            if ($stmt->rowCount() == 0) {
-                throw new \Exception('Het invoegen van het artikel is mislukt.');
-            }
-        } catch (\Exception $e) {
-            echo 'Fout bij het invoegen van artikel: ',  $e->getMessage(), "\n";
-        }
+    
     }
-
+    }
     
     public function getAllArtikelen() {
         try {
