@@ -1,5 +1,6 @@
 <?php
-require 'database.php';
+// acteur Nouaman Guendoul
+require 'Database.php';
 require 'Classes/klant.php';
 
 use Bas\Classes\klant;
@@ -26,11 +27,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
+<header>
         <nav>
             <ul>
-                <li><a href="index.php">Home</a></li>
+                <li><a href="Main.php">Home</a></li>
                 <li><a href="voeg_klant_toe.php">inloggen/registeren</a></li>
+                <li><a href="view_artikel.php">Artikel</a></li>
+                <li><a href="view_verkooporders.php">Verkooporder</a></li>
             </ul>
         </nav>
     </header>

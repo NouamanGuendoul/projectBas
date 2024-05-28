@@ -49,3 +49,30 @@ form button {
     border: none;
     cursor: pointer;
 }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2em;
+}
+
+table thead {
+    background-color: #f2f2f2;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
