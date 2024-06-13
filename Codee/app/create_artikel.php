@@ -1,10 +1,9 @@
 
 <?php
-// acteur Nouaman Guendoul
 include 'Database.php';
-include 'Classes/Artikel.php'; 
+include 'Classes/Artikel.php';
 
-
+use Bas\Classes\Artikel;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $artOmschrijving = $_POST['artOmschrijving'];
@@ -69,6 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         <button type="submit">Opslaan</button>
     </form>
+    
+    <form action="view_artikel.php">
+    <button> Artikelen</button>
+</form>
 
 </body>
 </html>
