@@ -1,4 +1,6 @@
 <?php
+namespace Bas\Classes;
+
 class Verkooporder {
     private $pdo;
 
@@ -7,14 +9,30 @@ class Verkooporder {
     }
 
     public function getVerkooporders() {
-        $stmt = $this->pdo->query("SELECT * FROM VERKOOPORDERS");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $this->pdo->query('
+            SELECT vo.verkOrdId, k.klantNaam, a.artOmschrijving, vo.verkOrdBestAantal, vo.verkOrdStatus, vo.verkOrdDatum 
+            FROM verkooporder vo
+            JOIN klant k ON vo.klantId = k.klantId
+            JOIN artikel a ON vo.artId = a.artId
+        ');
+        return $stmt->fetchAll();
     }
 
-    public function getVerkooporderById($verkOrdId) {
-        $stmt = $this->pdo->prepare("SELECT * FROM VERKOOPORDERS WHERE verkOrdId = :verkOrdId");
-        $stmt->execute([':verkOrdId' => $verkOrdId]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+    public function getVerkooporderByKlantNaam($klantNaam) {
+        $stmt = $this->pdo->prepare('
+            SELECT vo.verkOrdId, k.klantNaam, a.artOmschrijving, vo.verkOrdBestAantal, vo.verkOrdStatus, vo.verkOrdDatum 
+            FROM verkooporder vo
+            JOIN klant k ON vo.klantId = k.klantId
+            JOIN artikel a ON vo.artId = a.artId
+            WHERE k.klantNaam LIKE :klantNaam
+        ');
+        $stmt->execute([':klantNaam' => "%$klantNaam%"]);
+        return $stmt->fetchAll();
+    }
+
+    public function deleteVerkoopOrder($verkOrdId) {
+        $stmt = $this->pdo->prepare('DELETE FROM verkooporder WHERE verkOrdId = :verkOrdId');
+        return $stmt->execute([':verkOrdId' => $verkOrdId]);
     }
 }
 ?>

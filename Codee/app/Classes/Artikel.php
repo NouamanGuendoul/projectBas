@@ -1,40 +1,36 @@
 <?php
-// acteur Nouaman Guendoul
 namespace Bas\Classes;
 
 class Artikel {
     private $pdo;
 
-    public function __construct(\PDO $pdo) {
+    public function __construct($pdo) {
         $this->pdo = $pdo;
     }
 
-    public function createArtikel($omschrijving, $inkoop, $verkoop, $voorraad, $minVoorraad, $maxVoorraad, $locatie) {
-        try {
-            $stmt = $this->pdo->prepare("
-                INSERT INTO artikel 
-                (artOmschrijving, artInkoop, artVerkoop, artVoorraad, artMinVoorraad, artMaxVoorraad, artLocatie) 
-                VALUES 
-                (?, ?, ?, ?, ?, ?, ?)
-            ");
-            $stmt->execute([
-                $omschrijving, $inkoop, $verkoop, $voorraad, 
-                $minVoorraad, $maxVoorraad, $locatie
-            ]);
-            
-            // Controleer of de invoeging succesvol was
-    
+    public function createArtikel($artOmschrijving, $artInkoop, $artVerkoop, $artVoorraad, $artMinVoorraad, $artMaxVoorraad, $artLocatie) {
+        $sql = "INSERT INTO artikel (artOmschrijving, artInkoop, artVerkoop, artVoorraad, artMinVoorraad, artMaxVoorraad, artLocatie)
+                VALUES (:artOmschrijving, :artInkoop, :artVerkoop, :artVoorraad, :artMinVoorraad, :artMaxVoorraad, :artLocatie)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':artOmschrijving' => $artOmschrijving,
+            ':artInkoop' => $artInkoop,
+            ':artVerkoop' => $artVerkoop,
+            ':artVoorraad' => $artVoorraad,
+            ':artMinVoorraad' => $artMinVoorraad,
+            ':artMaxVoorraad' => $artMaxVoorraad,
+            ':artLocatie' => $artLocatie
+        ]);
     }
-    }
-    
-    public function getAllArtikelen() {
+
+     public function getAllArtikelen() {
         try {
-            $stmt = $this->pdo->query("SELECT artOmschrijving, artInkoop, artVerkoop, artVoorraad, artMinVoorraad, artMaxVoorraad, artLocatie FROM artikel");
-            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            $stmt = $this->pdo->query("SELECT * FROM artikel");
+            return $stmt->fetchAll();
         } catch (\Exception $e) {
             echo 'Fout bij het ophalen van artikelen: ',  $e->getMessage(), "\n";
             return [];
         }
     }
 }
-
+?>
