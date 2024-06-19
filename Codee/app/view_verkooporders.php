@@ -30,7 +30,8 @@
                 <th>Aantal</th>
                 <th>Status</th>
                 <th>Datum</th>
-                <th>Acties</th>
+                <th>verwijder</th>
+                <th>update</th>
             </tr>
         </thead>
         <tbody>
@@ -79,6 +80,12 @@ if(isset($_POST['klantNaam']) && !empty($_POST['klantNaam'])) {
                             <input type="hidden" name="verkOrdId" value="<?php echo htmlspecialchars($order['verkOrdId']); ?>">
                             <button type="submit" name="delete">Verwijderen</button>
                         </form>
+                    </td>
+                    <td>
+                    <form action="update_verkooporder.php" method="post">
+                        <input type="hidden" name="orderId" value="<?php echo htmlspecialchars($order['verkOrdId']); ?>">
+                        <button type="submit">Update</button>
+                    </form>
                     </td>
                 </tr>
             <?php endforeach; ?>

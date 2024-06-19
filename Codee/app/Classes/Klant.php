@@ -74,4 +74,16 @@ class Klant {
         $klant = $stmt->fetch(\PDO::FETCH_ASSOC);
         return $klant;
     }
+
+    public function getKlantById($klantId) {
+        $stmt = $this->pdo->prepare('SELECT * FROM klant WHERE klantId = ?');
+        $stmt->execute([$klantId]);
+        return $stmt->fetch();
+    }
+
+    public function updateKlant($klantId, $naam, $email, $klantPostcode, $telefoon, $adres) {
+        $stmt = $this->pdo->prepare('UPDATE klant SET klantNaam = ?, klantEmail = ?,  klantWoonplaats = ?, klantAdres =  ? , klantPostcode = ? WHERE klantId = ?');
+        $stmt->execute([$naam, $email, $telefoon, $adres, $klantPostcode, $klantId]);
+    }
 }
+

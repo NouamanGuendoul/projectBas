@@ -17,7 +17,8 @@
             </ul>
         </nav>
     </header>
-<h1>Artikelen Bekijken</h1>
+<!-- Add this below the existing table in view_artikel.php -->
+
 <table>
     <thead>
         <tr>
@@ -28,16 +29,17 @@
             <th>Min. Voorraad</th>
             <th>Max. Voorraad</th>
             <th>Locatie</th>
+            <th>Update</th>
         </tr>
     </thead>
-    <tbody >
+    <tbody>
         <?php
         include 'Database.php';
         include 'Classes/Artikel.php';
 
         use Bas\Classes\Artikel;
 
-        $artikel = new Artikel($pdo); // Geef de PDO-instantie door
+        $artikel = new Artikel($pdo); // Give the PDO instance
         $artikelen = $artikel->getAllArtikelen();
 
         foreach ($artikelen as $artikel): ?>
@@ -49,6 +51,12 @@
                 <td><?php echo htmlspecialchars($artikel['artMinVoorraad']); ?></td>
                 <td><?php echo htmlspecialchars($artikel['artMaxVoorraad']); ?></td>
                 <td><?php echo htmlspecialchars($artikel['artLocatie']); ?></td>
+                <td>
+                    <form action="update_artikel.php" method="post">
+                        <input type="hidden" name="artId" value="<?php echo htmlspecialchars($artikel['artId']); ?>">
+                        <button type="submit">Update</button>
+                    </form>
+                </td>
             </tr>
         <?php endforeach; ?>
     </tbody>

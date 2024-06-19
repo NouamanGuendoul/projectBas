@@ -8,29 +8,24 @@ class Artikel {
         $this->pdo = $pdo;
     }
 
-    public function createArtikel($artOmschrijving, $artInkoop, $artVerkoop, $artVoorraad, $artMinVoorraad, $artMaxVoorraad, $artLocatie) {
-        $sql = "INSERT INTO artikel (artOmschrijving, artInkoop, artVerkoop, artVoorraad, artMinVoorraad, artMaxVoorraad, artLocatie)
-                VALUES (:artOmschrijving, :artInkoop, :artVerkoop, :artVoorraad, :artMinVoorraad, :artMaxVoorraad, :artLocatie)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
-            ':artOmschrijving' => $artOmschrijving,
-            ':artInkoop' => $artInkoop,
-            ':artVerkoop' => $artVerkoop,
-            ':artVoorraad' => $artVoorraad,
-            ':artMinVoorraad' => $artMinVoorraad,
-            ':artMaxVoorraad' => $artMaxVoorraad,
-            ':artLocatie' => $artLocatie
-        ]);
+    public function getAllArtikelen() {
+        $stmt = $this->pdo->query('SELECT * FROM artikel');
+        return $stmt->fetchAll();
     }
 
-     public function getAllArtikelen() {
-        try {
-            $stmt = $this->pdo->query("SELECT * FROM artikel");
-            return $stmt->fetchAll();
-        } catch (\Exception $e) {
-            echo 'Fout bij het ophalen van artikelen: ',  $e->getMessage(), "\n";
-            return [];
-        }
+    public function getArtikelById($artId) {
+        $stmt = $this->pdo->prepare('SELECT * FROM artikel WHERE artId = ?');
+        $stmt->execute([$artId]);
+        return $stmt->fetch();
+    }
+
+    public function updateArtikel($artId, $artOmschrijving, $artInkoop, $artVerkoop, $artVoorraad, $artMinVoorraad, $artMaxVoorraad, $artLocatie) {
+        $stmt = $this->pdo->prepare('UPDATE artikel SET artOmschrijving = ?, artInkoop = ?, artVerkoop = ?, artVoorraad = ?, artMinVoorraad = ?, artMaxVoorraad = ?, artLocatie = ? WHERE artId = ?');
+        $stmt->execute([$artOmschrijving, $artInkoop, $artVerkoop, $artVoorraad, $artMinVoorraad, $artMaxVoorraad, $artLocatie, $artId]);
+    }
+    public function updateArtikelOmschrijving($artikelId, $omschrijving) {
+        $stmt = $this->pdo->prepare('UPDATE artikel SET artOmschrijving = ? WHERE artId = ?');
+        $stmt->execute([$omschrijving, $artikelId]);
     }
 }
 ?>

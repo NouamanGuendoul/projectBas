@@ -43,6 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php if (isset($result) && $result): ?>
         <h2>Gevonden Klant:</h2>
         <table>
+            
             <tr>
                 <th>ID</th>
                 <th>Klant Naam</th>
@@ -50,7 +51,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <th>Adres</th>
                 <th>Woonplaats</th>
                 <th>Postcode</th>
-                <th>acties</th>
+                <th>verwijder</th>
+                <th>update</th>
             </tr>
             <tr>
                 <td><?php echo htmlspecialchars($result['klantId']); ?></td>
@@ -64,8 +66,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <input type="hidden" name="klantId" value="<?php echo htmlspecialchars($result['klantId']); ?>">
                                 <button type="submit" name="delete">Verwijderen</button>
                             </form>
+                </td>          
+                <td>
+                            <form method="post"  action="update_klant.php">
+                                <input type="hidden" name="klantId" value="<?php echo htmlspecialchars($result['klantId']); ?>">
+                                <button type="submit" name="update">Update</button>
+                            </form>
+                
+                     </td>    
+                           
+            
 
-                    </td>
+                    
             </tr>
         </table>
     <?php elseif (isset($result)): ?>
@@ -74,6 +86,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <form action="voeg_klant_toe.php">
     <button>Nieuw klant</button>
-</form>
-</body>
-</html>
+   </form>
+
+   <form action="Main.php">
+    <button>Terug</button>
+   </form>

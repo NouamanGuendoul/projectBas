@@ -34,5 +34,19 @@ class Verkooporder {
         $stmt = $this->pdo->prepare('DELETE FROM verkooporder WHERE verkOrdId = :verkOrdId');
         return $stmt->execute([':verkOrdId' => $verkOrdId]);
     }
+
+    public function getOrderById($orderId) {
+        $stmt = $this->pdo->prepare('SELECT * FROM verkooporder WHERE verkOrdId = ?');
+        $stmt->execute([$orderId]);
+        return $stmt->fetch();
+    }
+
+    public function updateOrder($orderId, $klantId, $artikelId, $hoeveelheid, $datum) {
+        $stmt = $this->pdo->prepare('UPDATE verkooporder SET klantId = ?, artId = ?, verkOrdBestAantal = ?, verkOrdDatum = ? WHERE verkOrdId = ?');
+        $stmt->execute([$klantId, $artikelId, $hoeveelheid, $datum, $orderId]);
+    }
 }
+
+
+
 ?>
