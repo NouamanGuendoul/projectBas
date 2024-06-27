@@ -1,95 +1,60 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-    <meta charset="UTF-8">
-    <title>Verkooporders Inzien</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="Main.php">Home</a></li>
-                <li><a href="voeg_klant_toe.php">inloggen/registeren</a></li>
-                <li><a href="view_artikel.php">Artikel</a></li>
-                <li><a href="view_verkooporders.php">Verkooporder</a></li>
-            </ul>
-        </nav>
-    </header>
-    <h1>Verkooporders Inzien</h1>
-    <form method="post" action="view_verkooporders.php">
-        <label for="klantNaam">Zoeken op Klant Naam:</label>
-        <input type="text" id="klantNaam" name="klantNaam">
-        <button type="submit">Zoek</button>
-    </form>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Klant Naam</th>
-                <th>Artikel Omschrijving</th>
-                <th>Aantal</th>
-                <th>Status</th>
-                <th>Datum</th>
-                <th>verwijder</th>
-                <th>update</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php
-include 'Database.php';
-include 'Classes/Verkooporder.php';
-
-use Bas\Classes\Verkooporder;
-
-$verkooporder = new Verkooporder($pdo);
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
-    $verkOrdId = $_POST['verkOrdId'];
-    $verkooporder->deleteVerkoopOrder($verkOrdId);
+<?php
+require 'config.php'; // Database connection settings
+session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'verkoper') {
+    header('Location: login.php');
+    exit;
 }
 
-// Check if search query is present
-if(isset($_POST['klantNaam']) && !empty($_POST['klantNaam'])) {
-    $klantNaam = $_POST['klantNaam'];
-    $orders = $verkooporder->getVerkooporderByKlantNaam($klantNaam);
-} else {
-    $orders = $verkooporder->getVerkooporders();
+$orders = $pdo->query('SELECT * FROM verkooporders')->fetchAll();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $verkOrdId = $_POST['verkOrdId'];
+    $verkOrdStatus = $_POST['verkOrdStatus'];
+
+    $stmt = $pdo->prepare('UPDATE verkooporders SET verkOrdStatus = ? WHERE verkOrdId = ?');
+    $stmt->execute([$verkOrdStatus, $verkOrdId]);
+
+    header('Location: view_verkooporders.php');
+    exit;
 }
 ?>
-
-            <?php foreach ($orders as $order): ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($order['klantNaam']); ?></td>
-                    <td><?php echo htmlspecialchars($order['artOmschrijving']); ?></td>
-                    <td><?php echo htmlspecialchars($order['verkOrdBestAantal']); ?></td>
-                    <td>
-                        <form method="post" action="update_order_status.php">
-                            <input type="hidden" name="verkOrdId" value="<?php echo htmlspecialchars($order['verkOrdId']); ?>">
-                            <select name="new_status">
-                                <option value="In afwachting" <?php if ($order['verkOrdStatus'] == 'In afwachting') echo 'selected'; ?>>In afwachting</option>
-                                <option value="In behandeling" <?php if ($order['verkOrdStatus'] == 'In behandeling') echo 'selected'; ?>>In behandeling</option>
-                                <option value="Voltooid" <?php if ($order['verkOrdStatus'] == 'Voltooid') echo 'selected'; ?>>Voltooid</option>
-                            </select>
-
-                            <button type="submit">Bijwerken</button>
-                        </form>
-                    </td>
-                    <td><?php echo htmlspecialchars($order['verkOrdDatum']); ?></td>
-                    <td>
-                        <form method="post" action="view_verkooporders.php" style="display:inline;">
-                            <input type="hidden" name="verkOrdId" value="<?php echo htmlspecialchars($order['verkOrdId']); ?>">
-                            <button type="submit" name="delete">Verwijderen</button>
-                        </form>
-                    </td>
-                    <td>
-                    <form action="update_verkooporder.php" method="post">
-                        <input type="hidden" name="orderId" value="<?php echo htmlspecialchars($order['verkOrdId']); ?>">
-                        <button type="submit">Update</button>
-                    </form>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View and Update Verkooporders</title>
+</head>
+<body>
+    <h1>Verkooporders</h1>
+    <table border="1">
+        <tr>
+            <th>Order ID</th>
+            <th>Klant ID</th>
+            <th>Order Datum</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        <?php foreach ($orders as $order): ?>
+        <tr>
+            <td><?php echo $order['verkOrdId']; ?></td>
+            <td><?php echo $order['klantId']; ?></td>
+            <td><?php echo $order['verkOrdDatum']; ?></td>
+            <td><?php echo $order['verkOrdStatus']; ?></td>
+            <td>
+                <form method="post" action="">
+                    <input type="hidden" name="verkOrdId" value="<?php echo $order['verkOrdId']; ?>">
+                    <select name="verkOrdStatus">
+                        <option value="Pending" <?php if ($order['verkOrdStatus'] == 'Pending') echo 'selected'; ?>>Pending</option>
+                        <option value="Processing" <?php if ($order['verkOrdStatus'] == 'Processing') echo 'selected'; ?>>Processing</option>
+                        <option value="Shipped" <?php if ($order['verkOrdStatus'] == 'Shipped') echo 'selected'; ?>>Shipped</option>
+                        <option value="Delivered" <?php if ($order['verkOrdStatus'] == 'Delivered') echo 'selected'; ?>>Delivered</option>
+                        <option value="Cancelled" <?php if ($order['verkOrdStatus'] == 'Cancelled') echo 'selected'; ?>>Cancelled</option>
+                    </select>
+                    <input type="submit" value="Update Status">
+                </form>
+            </td>
+        </tr>
+        <?php endforeach; ?>
     </table>
 </body>
 </html>

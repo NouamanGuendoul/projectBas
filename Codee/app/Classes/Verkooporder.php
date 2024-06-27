@@ -41,10 +41,6 @@ class Verkooporder {
         return $stmt->fetch();
     }
 
-    public function updateOrder($orderId, $klantId, $artikelId, $hoeveelheid, $datum) {
-        $stmt = $this->pdo->prepare('UPDATE verkooporder SET klantId = ?, artId = ?, verkOrdBestAantal = ?, verkOrdDatum = ? WHERE verkOrdId = ?');
-        $stmt->execute([$klantId, $artikelId, $hoeveelheid, $datum, $orderId]);
-    }
 }
 
 

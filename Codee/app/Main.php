@@ -15,7 +15,7 @@
                 <li><a href="view_klant.php">inloggen/registeren</a></li>
                 <li><a href="view_artikel.php">Artikel</a></li>
                 <li><a href="view_verkooporders.php">Verkooporder</a></li>
-                <li><a href="create_inkooporder.php">inkooporder</a></li>
+                <li><a href="login.php">login</a></li>
             </ul>
         </nav>
     </header>
